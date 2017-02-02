@@ -5,9 +5,8 @@ const deployTemplateFunctionName = 'deployTemplate';
 
 // Generates NodeJs code for arm template deployment.
 exports.deployTemplate = function deployTemplate() {
-  var text = `function ${deployTemplateFunctionName}(callback){\
+  var text = `function ${deployTemplateFunctionName}(credentials, callback){\
       \
-      var credentials;\
       var subscriptionId;\
       var resourceGroupName;\
       var deploymentName;\
@@ -37,7 +36,7 @@ exports.importsForDeployTemplate = function importsForDeployTemplate(){
 }
 
 exports.deployTemplateCallSite = function deployTemplateCallSite() {
-  var text = `${deployTemplateFunctionName}(function(err, result){ });`;
+  var text = `${deployTemplateFunctionName}(credentials, function(err, result){ });`;
   return generateCode(text);
 }
 
