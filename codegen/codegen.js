@@ -7,6 +7,7 @@ const deployTemplateFunctionName = 'deployTemplate';
 exports.deployTemplate = function deployTemplate() {
   var text = `function ${deployTemplateFunctionName}(credentials, callback){\
       \
+      // TODO: initialize these variables
       var subscriptionId;\
       var resourceGroupName;\
       var deploymentName;\
@@ -55,9 +56,18 @@ exports.generateNewLine = function generateNewLine() {
 
 // parse the text blob and emit code from the AST.
 function generateCode(text) {
-  var ast = esprima.parse(text);
+  var ast = esprima.parse(text, { raw: true, tokens: true, range: true, comment: true });
+  ast = escodegen.attachComments(ast, ast.comments, ast.tokens);
+
+  var codegenOptions = {
+    comment: true,
+    format: {
+        indent: {
+            style: '  '
+        },
+    }
+  };
   
-  // TODO: configure code generation options (preserve newlines, tabspaces etc.)
-  var code = escodegen.generate(ast);
+  var code = escodegen.generate(ast, codegenOptions);
   return code;
 }
