@@ -1,5 +1,7 @@
 let vscode = require('vscode');
 let exec = require('child_process').exec;
+let path = require('path');
+let fs = require('fs');
 
 // TODO: find a way to have the extension auto update the package dependency, instead of having an update to VSCode extension.
 // TODO: try to optimize time spent in this method.
@@ -11,8 +13,23 @@ let exec = require('child_process').exec;
 // The only thing this extension needs to do is to ensure that a certain npm package is installed globally.
 // Ideally this should be done during install time, but VSCode does not support install time tasks.
 // So, we do this on activation. Ideally, this is a one time task.
-function activate() {
+function activate(context) {
 
+    // Register commands.
+    var commandFilesPath = path.join(context.extensionPath, 'commands');
+    fs.readdir(commandFilesPath, (err, files) => {
+        files.forEach((file) => {
+            context.subscriptions.push(
+                require('./commands/' + path.basename(file, '.js')).createCommand()
+            );
+            console.log(path.basename(file, '.js') + ' command added');
+        });
+    });
+}
+
+function ImportIntoMain(){
+
+    // Download and install template generator package.
     var extensionName = 'Azure-NodeJS-Essentials';
     var generatorPackageName = 'generator-azure-node';
 
@@ -56,9 +73,7 @@ function activate() {
             vscode.window.showInformationMessage(`An error occurred while ${extensionName} was installing dependencies. ${err}`);
         });
     });
-    
 }
-
 
 // helpers
 
