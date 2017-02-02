@@ -1,9 +1,11 @@
 var esprima = require('esprima');
 var escodegen = require('escodegen');
 
+const deployTemplateFunctionName = 'deployTemplate';
+
 // Generates NodeJs code for arm template deployment.
 exports.deployTemplate = function deployTemplate() {
-  var text = 'function deployTemplate(callback){\
+  var text = `function ${deployTemplateFunctionName}(callback){\
       \
       var credentials;\
       var subscriptionId;\
@@ -22,14 +24,21 @@ exports.deployTemplate = function deployTemplate() {
       \
       var resourceClient = new ResourceManagement.ResourceManagementClient(credentials, subscriptionId);\
       resourceClient.deployments.createOrUpdate(resourceGroupName, deploymentName, parameters, callback);\
-    }';
+    }`;
     
     return generateCode(text);
 };
 
 exports.importsForDeployTemplate = function importsForDeployTemplate(){
-  var requireStatements = [generateRequireStatement('fs'), generateRequireStatement('ResourceManagement', 'azure-arm-resource')];
+  var requireStatements = [generateRequireStatement('fs'), 
+                           generateRequireStatement('ResourceManagement', 'azure-arm-resource')];
+
   return requireStatements;
+}
+
+exports.deployTemplateCallSite = function deployTemplateCallSite() {
+  var text = `${deployTemplateFunctionName}(function(err, result){ });`;
+  return generateCode(text);
 }
 
 function generateRequireStatement(name, packageName){
