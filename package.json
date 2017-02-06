@@ -28,9 +28,9 @@
         ],
         "commands":[
             {
-                "command": "azure-node.template-deploy",
+                "command": "Azure-Node.template-deploy",
                 "title": "Generate code for template deployment",
-                "category": "azure-node"
+                "category": "Azure-Node"
             }
         ]
     },

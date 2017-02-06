@@ -25,16 +25,18 @@ function activate(context) {
             console.log(path.basename(file, '.js') + ' command added');
         });
     });
+
+    ensureDependenciesAreInstalled();
 }
 
-function ImportIntoMain(){
+function ensureDependenciesAreInstalled() {
 
     // Download and install template generator package.
     var extensionName = 'Azure-NodeJS-Essentials';
     var generatorPackageName = 'generator-azure-node';
 
-    isNodeInstalled().then(function (result){
-        if(!result){
+    isNodeInstalled().then(function (result) {
+        if (!result) {
             vscode.window.showInformationMessage(`Please install NodeJS and then run ${extensionName} extension.`);
             return;
         }
@@ -42,7 +44,7 @@ function ImportIntoMain(){
         // check the npm cache on this machine and determine if our dependency is present.
         // if the dependency is present, there is nothing more to do.
         // if it is not present, install it from npm. 
-        list().then(function (listOfPackages) {
+        npmList().then(function (listOfPackages) {
             var present = listOfPackages.some(function (item) {
                 if (item.startsWith(generatorPackageName)) {
                     return true;
@@ -56,18 +58,18 @@ function ImportIntoMain(){
                 var options = {
                     global: true
                 };
-                
+
                 // indicate to the user that the extension needs to perform some one-time startup tasks
                 vscode.window.showInformationMessage(`${extensionName} is installing dependencies. This is a one time, long running operation. We will notify you when it is done.`);
 
-                return install([generatorPackageName], options);
+                return npmInstall([generatorPackageName], options);
             }
-            else{
+            else {
                 return Promise.resolve(1); // return success. statusCode 1 (pre-installed, nothing to do.)
             }
         }).then(function (statusCode) {
-            if(statusCode === 0) {
-              vscode.window.showInformationMessage(`${extensionName} has finished installing dependencies and is ready for use.`);
+            if (statusCode === 0) {
+                vscode.window.showInformationMessage(`${extensionName} has finished installing dependencies and is ready for use.`);
             }
         }).catch(function (err) {
             vscode.window.showInformationMessage(`An error occurred while ${extensionName} was installing dependencies. ${err}`);
@@ -80,23 +82,23 @@ function ImportIntoMain(){
 // checks if there exists a valid installation of NodeJs on this machine
 function isNodeInstalled() {
     var cmdString = "node -v";
-    return new Promise(function(resolve, reject){
+    return new Promise(function (resolve, reject) {
         exec(cmdString, (error, stdout) => {
-           if(error){
-             return reject(error);
-           }
+            if (error) {
+                return reject(error);
+            }
 
-           if(stdout.startsWith('v')){
-             return resolve(true); 
-           }
+            if (stdout.startsWith('v')) {
+                return resolve(true);
+            }
 
-           return resolve(false);
+            return resolve(false);
         });
     });
 }
 
 // lists all globally installed npm packages.
-function list(path) {
+function npmList(path) {
     var global = false;
     if (!path) global = true;
     var cmdString = "npm ls --depth=0 " + (global ? "-g " : " ");
@@ -134,7 +136,7 @@ function list(path) {
 }
 
 // install given list of npm packages to the global location.
-function install(packages, opts) {
+function npmInstall(packages, opts) {
     if (packages.length == 0 || !packages || !packages.length) { Promise.reject("No packages found"); }
     if (typeof packages == "string") packages = [packages];
     if (!opts) opts = {};

@@ -25,13 +25,13 @@ exports.deployTemplate = function deployTemplate() {
       var resourceClient = new ResourceManagement.ResourceManagementClient(credentials, subscriptionId);\
       resourceClient.deployments.createOrUpdate(resourceGroupName, deploymentName, parameters, callback);\
     }`;
-    
-    return generateCode(text);
+
+  return generateCode(text);
 };
 
-exports.importsForDeployTemplate = function importsForDeployTemplate(){
-  var requireStatements = [generateRequireStatement('fs'), 
-                           generateRequireStatement('ResourceManagement', 'azure-arm-resource')];
+exports.importsForDeployTemplate = function importsForDeployTemplate() {
+  var requireStatements = [generateRequireStatement('fs'),
+  generateRequireStatement('ResourceManagement', 'azure-arm-resource')];
 
   return requireStatements;
 }
@@ -41,8 +41,8 @@ exports.deployTemplateCallSite = function deployTemplateCallSite() {
   return generateCode(text);
 }
 
-function generateRequireStatement(name, packageName){
-  if(!packageName){
+function generateRequireStatement(name, packageName) {
+  if (!packageName) {
     packageName = name;
   }
 
@@ -62,12 +62,12 @@ function generateCode(text) {
   var codegenOptions = {
     comment: true,
     format: {
-        indent: {
-            style: '  '
-        },
+      indent: {
+        style: '  '
+      },
     }
   };
-  
+
   var code = escodegen.generate(ast, codegenOptions);
   return code;
 }
