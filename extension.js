@@ -8,6 +8,7 @@ let fs = require('fs');
 // instead of enumerating all the installed npm packages every time on activation. drop a file to this extension's install path
 // after installing dependencies. after the first time, just check for the presence of that sentinel file and bail.
 // that does not ensure the dependency will always exist though. 
+// TODO: check for package version updates and re-install if necessary.
 
 // Called once to activate the extension.
 // The only thing this extension needs to do is to ensure that a certain npm package is installed globally.

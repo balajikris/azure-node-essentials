@@ -7,6 +7,16 @@
     "engines": {
         "vscode": "^0.10.0"
     },
+    "keywords": [
+        "azure",
+        "cloud",
+        "azure-sdk"
+    ],
+    "icon": "resources/azure-icon.png",
+    "galleryBanner": {
+        "color": "#00abec",
+        "theme": "light"
+    },
     "categories": [
         "Other",
         "Snippets"
@@ -26,7 +36,7 @@
                 "path": "./snippets/snippets.json"
             }
         ],
-        "commands":[
+        "commands": [
             {
                 "command": "Azure-Node.template-deploy",
                 "title": "Generate code for template deployment",
@@ -34,8 +44,7 @@
             }
         ]
     },
-    "scripts": {
-    },
+    "scripts": {},
     "dependencies": {
         "npm": "*",
         "escodegen": "^1.8.1",
